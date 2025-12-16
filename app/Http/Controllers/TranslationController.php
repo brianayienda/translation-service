@@ -83,23 +83,32 @@ public function export(Request $request)
 {
     $locale = $request->get('locale', 'en');
 
-    return Cache::remember(
-        "export_{$locale}",
-        now()->addSeconds(30),
-        function () use ($locale) {
-            return Translation::with('tags') // eager load tags
-                ->where('locale', $locale)
-                ->get()
-                ->mapWithKeys(function ($translation) {
-                    return [
-                        $translation->key => [
-                            'value' => $translation->value,
-                            'tags' => $translation->tags->pluck('name')->toArray()
-                        ]
-                    ];
-                });
-        }
-    );
+    // Stream the response as JSON
+    return response()->streamDownload(function () use ($locale) {
+        echo '['; // start JSON array
+        $first = true;
+
+        Translation::with('tags')
+            ->where('locale', $locale)
+            ->chunk(1000, function ($translations) use (&$first) {
+                foreach ($translations as $translation) {
+                    if (!$first) {
+                        echo ',';
+                    }
+                    $first = false;
+
+                    echo json_encode([
+                        'key' => $translation->key,
+                        'value' => $translation->value,
+                        'tags' => $translation->tags->pluck('name')->toArray(),
+                    ]);
+                }
+            });
+
+        echo ']'; // end JSON array
+    }, "translations_{$locale}.json", [
+        'Content-Type' => 'application/json',
+    ]);
 }
 
 
