@@ -12,21 +12,28 @@ class TranslationSeeder extends Seeder
     {
         $tags = ['mobile', 'desktop', 'web'];
 
-        // Ensure tags exist
         foreach ($tags as $tagName) {
             Tag::firstOrCreate(['name' => $tagName]);
         }
 
-        // Create translations and assign tags
-        Translation::factory()
-            ->count(100000)
-            ->create()
-            ->each(function ($translation) use ($tags) {
-                $tagIds = collect($tags)
-                    ->random(rand(1, 2)) // assign 1-2 random tags
-                    ->map(fn($name) => Tag::firstOrCreate(['name' => $name])->id);
+        $locales = ['en', 'fr', 'es']; // optional multiple locales
+        $total = 100000;
 
-                $translation->tags()->sync($tagIds);
-            });
+        for ($i = 0; $i < $total; $i++) {
+            $key = 'app.key_' . $i;
+            $locale = $locales[array_rand($locales)];
+
+            $translation = Translation::firstOrCreate(
+                ['key' => $key, 'locale' => $locale],
+                ['value' => fake()->sentence()]
+            );
+
+            // assign 1-2 random tags
+            $tagIds = collect($tags)
+                ->random(rand(1, 2))
+                ->map(fn ($name) => Tag::firstOrCreate(['name' => $name])->id);
+
+            $translation->tags()->sync($tagIds);
+        }
     }
 }

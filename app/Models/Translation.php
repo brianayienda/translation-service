@@ -8,11 +8,11 @@ class Translation extends Model
 
 {
     use HasFactory;
-    
+
     protected $fillable = ['key', 'locale', 'value'];
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+    return $this->belongsToMany(Tag::class, 'translation_tag');
     }
 }
