@@ -87,12 +87,21 @@ public function export(Request $request)
         "export_{$locale}",
         now()->addSeconds(30),
         function () use ($locale) {
-            return Translation::where('locale', $locale)
-                ->get(['key', 'value'])
-                ->pluck('value', 'key');
+            return Translation::with('tags') // eager load tags
+                ->where('locale', $locale)
+                ->get()
+                ->mapWithKeys(function ($translation) {
+                    return [
+                        $translation->key => [
+                            'value' => $translation->value,
+                            'tags' => $translation->tags->pluck('name')->toArray()
+                        ]
+                    ];
+                });
         }
     );
 }
+
 
 private function clearExportCache(string $locale): void
 {
