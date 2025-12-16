@@ -27,6 +27,9 @@ class TranslationController extends Controller
         $translation->tags()->sync($tagIds);
     }
 
+    $this->clearExportCache($translation->locale);
+
+
     return response()->json($translation->load('tags'), 201);
 }
 
@@ -42,6 +45,36 @@ public function search(Request $request)
                 $t->where('name', $request->tag)))
         ->limit(100)
         ->get();
+}
+
+public function update(Request $request, Translation $translation)
+{
+    $data = $request->validate([
+        'value' => 'required|string',
+        'tags' => 'array'
+    ]);
+
+    $translation->update($data);
+
+    if (isset($data['tags'])) {
+        $tagIds = collect($data['tags'])
+            ->map(fn ($name) => Tag::firstOrCreate(['name' => $name])->id);
+        $translation->tags()->sync($tagIds);
+    }
+
+    $this->clearExportCache($translation->locale);
+
+    return response()->json($translation->load('tags'));
+}
+
+public function destroy(Translation $translation)
+{
+    $locale = $translation->locale;
+    $translation->delete();
+
+    $this->clearExportCache($locale);
+
+    return response()->noContent();
 }
 
 
@@ -60,6 +93,12 @@ public function export(Request $request)
         }
     );
 }
+
+private function clearExportCache(string $locale): void
+{
+    Cache::forget("export_{$locale}");
+}
+
 
 
 }
