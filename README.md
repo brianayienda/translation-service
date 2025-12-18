@@ -88,7 +88,7 @@ Example POST Body:
 
 ## Design Choices
 
-Laravel Sanctum: Chosen for simple API token authentication without OAuth complexity.
-Tags relationship: Translations can be tagged to allow filtering/searching by category.
-Chunking in export: Prevents memory overload when exporting large numbers of translations.
-Validation: All create/update requests validate required fields to maintain data integrity.
+1. Laravel Sanctum: Chosen for simple API token authentication without OAuth complexity.
+2. Tags relationship: Translations can be tagged to allow filtering/searching by category.
+3. Chunking in export: Prevents memory overload when exporting large numbers of translations.
+4. Validation: All create/update requests validate required fields to maintain data integrity.
