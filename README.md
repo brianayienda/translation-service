@@ -73,12 +73,13 @@ Accept: application/json
 ## API Endpoints
 
 Method Endpoint Description Example URL
-GET /translations List all translations http://127.0.0.1:8000/api/translations
-POST /translations Create a translation http://127.0.0.1:8000/api/translations
-GET /translations/search Search translations http://127.0.0.1:8000/api/translations/search?key=greeting&locale=en&tag=home
-GET /translations/export Export translations by locale http://127.0.0.1:8000/api/translations/export?locale=en
-PUT /translations/{translation} Update a translation http://127.0.0.1:8000/api/translations/1
-DELETE /translations/{translation} Delete a translation http://127.0.0.1:8000/api/translations/1
+
+1. GET /translations List all translations http://127.0.0.1:8000/api/translations
+2. POST /translations Create a translation http://127.0.0.1:8000/api/translations
+3. GET /translations/search Search translations http://127.0.0.1:8000/api/translations/search?key=greeting&locale=en&tag=home
+4. GET /translations/export Export translations by locale http://127.0.0.1:8000/api/translations/export?locale=en
+5. PUT /translations/{translation} Update a translation http://127.0.0.1:8000/api/translations/1
+6. DELETE /translations/{translation} Delete a translation http://127.0.0.1:8000/api/translations/1
 
 Example POST Body:
 
