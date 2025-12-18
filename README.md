@@ -51,8 +51,8 @@ A simple Laravel-based API for managing translations with support for tagging, s
 
 8. php artisan migrate
 
-Seed the DB with the 100K records
-9. php artisan db:seed
+
+9. Seed the DB with the 100K records:  php artisan db:seed
 
 10. php artisan serve
 
