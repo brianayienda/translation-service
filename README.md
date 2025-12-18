@@ -63,16 +63,16 @@ GET /api/token
 Response:
 Use this token in the Authorization header as Bearer <token> for all protected endpoints.
 
-Authentication
+## Authentication
 This API uses Laravel Sanctum for token-based authentication. All endpoints except /api/token require a Bearer token.
+1. GET /token List all translations http://127.0.0.1:8000/api/token
+
 
 Authorization: Bearer <your-token>
 
 Accept: application/json
 
 ## API Endpoints
-
-Method Endpoint Description Example URL
 
 1. GET /translations List all translations http://127.0.0.1:8000/api/translations
 2. POST /translations Create a translation http://127.0.0.1:8000/api/translations
