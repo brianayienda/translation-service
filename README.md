@@ -51,9 +51,12 @@ A simple Laravel-based API for managing translations with support for tagging, s
 
 8. php artisan migrate
 
-9. php artisan serve
+Seed the DB with the 100K records
+9. php artisan db:seed
 
-10. Generate a test user token:
+10. php artisan serve
+
+11. Generate a test user token:
 
 GET /api/token
 Response:
