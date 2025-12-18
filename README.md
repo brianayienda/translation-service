@@ -37,31 +37,27 @@ A simple Laravel-based API for managing translations with support for tagging, s
 
 ## Installation
 
-Clone the repository:
+1. Clone the repository:
 
-git clone <repo>
-cd translation-service
-Install dependencies:
+2. git clone https://github.com/brianayienda/translation-service.git
+3. cd translation-service
 
-composer install
-Copy .env.example to .env and configure your database and Redis:
+4. composer install
+5. Copy .env.example to .env and configure your database
 
-cp .env.example .env
-Generate application key:
+6. cp .env.example .env
 
-php artisan key:generate
-Run migrations:
+7. php artisan key:generate
 
-php artisan migrate
-Start the server:
+8. php artisan migrate
 
-php artisan serve
-Setup
-Generate a test user token:
+9. php artisan serve
+
+10. Generate a test user token:
 
 GET /api/token
 Response:
-Use this token in the Authorization header as Bearer <token> for all protected endpoints.
+Use this token in the Authorization header as Bearer for all protected endpoints.
 
 ## Authentication
 This API uses Laravel Sanctum for token-based authentication. All endpoints except /api/token require a Bearer token.
