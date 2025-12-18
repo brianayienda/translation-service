@@ -78,38 +78,29 @@ public function destroy(Translation $translation)
 }
 
 
-
 public function export(Request $request)
 {
     $locale = $request->get('locale', 'en');
+    $cacheKey = "translation_export_{$locale}";
 
-    // Stream the response as JSON
-    return response()->streamDownload(function () use ($locale) {
-        echo '['; // start JSON array
-        $first = true;
+    // Cache for 10 minutes
+    return Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($locale) {
+        $result = [];
 
-        Translation::with('tags')
-            ->where('locale', $locale)
-            ->chunk(1000, function ($translations) use (&$first) {
-                foreach ($translations as $translation) {
-                    if (!$first) {
-                        echo ',';
-                    }
-                    $first = false;
+        // Use chunking to avoid large payloads breaking Redis
+        Translation::with('tags')->where('locale', $locale)->chunk(1000, function ($translations) use (&$result) {
+            foreach ($translations as $translation) {
+                $result[$translation->key] = [
+                    'value' => $translation->value,
+                    'tags'  => $translation->tags->pluck('name')->toArray(),
+                ];
+            }
+        });
 
-                    echo json_encode([
-                        'key' => $translation->key,
-                        'value' => $translation->value,
-                        'tags' => $translation->tags->pluck('name')->toArray(),
-                    ]);
-                }
-            });
-
-        echo ']'; // end JSON array
-    }, "translations_{$locale}.json", [
-        'Content-Type' => 'application/json',
-    ]);
+        return $result;
+    });
 }
+
 
 
 private function clearExportCache(string $locale): void
